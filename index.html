@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Harshit Kant, Front end Engineer, TPM</title>
+  <meta name="description" content="Portfolio of Harshit Kant, Front end Engineer and Technical Program Manager. Live GitHub repos, Wikipedia inspired layout with modern motion and color." />
+
+  <!-- React via CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <style>
+    :root{
+      --bg: #0b1020;
+      --panel: #0f1530;
+      --text: #e7eaf3;
+      --muted: #a7b0c3;
+      --link: #79b6ff;
+      --accent: #7c6cff;
+      --accent-2: #45e4c1;
+      --border: #233055;
+      --chip: #182349;
+      --wiki: #f8f9fa;
+      --wiki-text: #202122;
+      --wiki-muted: #54595d;
+      --wiki-border: #a2a9b1;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body { font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color: var(--text); background: radial-gradient(1200px 800px at 20% -10%, #182349 0, rgba(24,35,73,0) 60%), radial-gradient(1000px 700px at 120% 10%, #1b2754 0, rgba(27,39,84,0) 60%), var(--bg); }
+
+    a { color: var(--link); text-decoration: underline; }
+    img { max-width: 100%; display: block; }
+
+    .page { max-width: 1100px; padding: 24px; margin: 0 auto 80px; position: relative; }
+    header { display: flex; align-items: center; gap: 16px; padding: 10px 0 16px; border-bottom: 1px solid var(--border); position: sticky; top: 0; backdrop-filter: blur(6px); background: color-mix(in srgb, var(--bg) 86%, transparent); z-index: 10; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-badge { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #0b0f1c; }
+    .brand-text { line-height: 1.1; }
+    .brand-text .title { font-weight: 700; }
+    .brand-text .tag { color: var(--muted); font-size: 13px; }
+    .spacer { flex: 1; }
+    .search-wrap { display: flex; align-items: center; gap: 8px; }
+    .search { width: 280px; max-width: 42vw; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: #0b1228; color: var(--text); }
+    .toggle { border: 1px solid var(--border); background: #0b1228; color: var(--text); border-radius: 8px; padding: 8px 12px; cursor: pointer; }
+
+    .hero { display: grid; grid-template-columns: 1fr 320px; gap: 24px; align-items: center; margin-top: 18px; }
+    .hero h1 { margin: 0 0 6px; font-size: 32px; }
+    .hero .roles { color: var(--muted); font-weight: 600; }
+    .hero p.lead { margin-top: 8px; color: var(--muted); }
+    .avatar-card { position: relative; border: 1px solid var(--border); background: linear-gradient(180deg, #111737, #0b1228); border-radius: 16px; padding: 12px; overflow: hidden; }
+    .avatar-card img { width: 100%; border-radius: 12px; aspect-ratio: 1 / 1; object-fit: cover; }
+    .blob { position: absolute; inset: auto auto -20% -20%; width: 280px; height: 280px; background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 60%, transparent), transparent 70%); filter: blur(20px); animation: float 9s ease-in-out infinite alternate; opacity: 0.7; }
+    .blob2 { inset: -20% -20% auto auto; background: radial-gradient(closest-side, color-mix(in srgb, var(--accent-2) 55%, transparent), transparent 70%); animation-duration: 12s; }
+    @keyframes float { from { transform: translate(0, 0) rotate(0deg); } to { transform: translate(12px, -8px) rotate(6deg); } }
+
+    .grid { display: grid; grid-template-columns: 260px 1fr 280px; gap: 20px; margin-top: 26px; }
+
+    .toc { border: 1px solid var(--border); background: #0b1228; border-radius: 12px; padding: 12px; font-size: 14px; position: static; }
+    .toc .head { font-weight: 700; margin-bottom: 8px; }
+    .toc ol { margin: 0; padding-left: 16px; }
+    .toc a { text-decoration: none; color: var(--link); }
+
+    main article h2 { font-size: 22px; margin: 26px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+    main article h3 { font-size: 16px; margin: 18px 0 8px; color: var(--muted); }
+
+    .infobox { border: 1px solid var(--border); border-radius: 12px; background: #0b1228; padding: 12px; position: static; }
+    .infobox table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .infobox caption { text-align: left; font-weight: 700; margin-bottom: 8px; }
+    .infobox th, .infobox td { padding: 6px 4px; border-bottom: 1px solid #1a2443; vertical-align: top; }
+    .infobox th { width: 34%; color: var(--muted); text-align: left; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip { background: var(--chip); border: 1px solid var(--border); border-radius: 999px; padding: 2px 8px; font-size: 12px; }
+
+    .repo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .repo { border: 1px solid var(--border); background: #0b1228; border-radius: 12px; padding: 12px; transition: transform 160ms ease, background 160ms ease; }
+    .repo:hover { transform: translateY(-2px); background: #0d1531; }
+    .repo a { text-decoration: none; color: var(--text); }
+    .repo .name { font-weight: 700; }
+    .repo .desc { font-size: 14px; color: var(--muted); margin: 6px 0 10px; min-height: 20px; }
+    .repo .meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+
+    footer { margin-top: 40px; padding-top: 14px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+
+    .light body, .light { background: var(--wiki); color: var(--wiki-text); }
+    .light header { border-bottom-color: var(--wiki-border); background: rgba(255,255,255,0.8); }
+    .light .search, .light .toggle { background: #fff; color: #111; border-color: #d7dce3; }
+    .light .hero p.lead, .light .brand-text .tag { color: var(--wiki-muted); }
+    .light .avatar-card { background: #fff; border-color: #e5e8ef; }
+    .light .grid .toc, .light .infobox, .light .repo { background: #fff; border-color: #e5e8ef; }
+    .light main article h2 { border-bottom-color: #e5e8ef; }
+    .light .repo:hover { background: #f8fafc; }
+    .light a { color: #1a5fb4; }
+    .light .chip { background: #f3f5f9; border-color: #e5e8ef; }
+    .light .toc a { color: #1a5fb4; }
+
+    @media (max-width: 950px){
+      .hero { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .repo-grid { grid-template-columns: 1fr; }
+      header { position: relative; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/javascript">
+    const { useEffect, useMemo, useState } = React;
+
+    function useGithubUser(username){
+      const [data, setData] = useState(null);
+      useEffect(() => {
+        let alive = true;
+        fetch("https://api.github.com/users/" + username)
+          .then(r => r.ok ? r.json() : Promise.reject(r))
+          .then(j => { if(alive) setData(j); })
+          .catch(() => { if(alive) setData(null); });
+        return () => { alive = false; };
+      }, [username]);
+      return { data };
+    }
+
+    function useGithubRepos(username){
+      const [repos, setRepos] = useState([]);
+      useEffect(() => {
+        let alive = true;
+        fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`)
+          .then(r => r.ok ? r.json() : Promise.reject(r))
+          .then(j => { if(alive) setRepos(j || []); })
+          .catch(() => { if(alive) setRepos([]); });
+        return () => { alive = false; };
+      }, [username]);
+      return { repos };
+    }
+
+    function Header({ q, setQ, mode, setMode }){
+      return (
+        React.createElement("header", null,
+          React.createElement("div", { className: "brand" },
+            React.createElement("div", { className: "brand-badge" }, "HK"),
+            React.createElement("div", { className: "brand-text" },
+              React.createElement("div", { className: "title" }, "Harshit Kant"),
+              React.createElement("div", { className: "tag" }, "Front end Engineer, Technical Program Manager")
+            )
+          ),
+          React.createElement("div", { className: "spacer" }),
+          React.createElement("div", { className: "search-wrap" },
+            React.createElement("input", { className: "search", placeholder: "Search repositories", value: q, onChange: e => setQ(e.target.value) }),
+            React.createElement("button", { className: "toggle", onClick: () => setMode(mode === "dark" ? "light" : "dark") }, mode === "dark" ? "Light" : "Dark")
+          )
+        )
+      );
+    }
+
+    function Hero({ user }){
+      const avatar = user?.avatar_url || "https://avatars.githubusercontent.com/u/9919?s=200&v=4";
+      return (
+        React.createElement("section", { className: "hero" },
+          React.createElement("div", null,
+            React.createElement("h1", null, "Front end Engineer, TPM"),
+            React.createElement("div", { className: "roles" }, "JavaScript, TypeScript, React, Web performance, Program delivery"),
+            React.createElement("p", { className: "lead" },
+              "I build fast, tidy interfaces, guide delivery across teams, and keep quality high. I ship inclusive UIs, smooth interactions, and clear roadmaps."
+            ),
+            React.createElement("div", { className: "chips", style: { marginTop: 10 } },
+              ["React", "TypeScript", "Vite", "Next.js", "Node", "Automation", "Program planning"].map(t =>
+                React.createElement("span", { key: t, className: "chip" }, t)
+              )
+            )
+          ),
+          React.createElement("div", { className: "avatar-card" },
+            React.createElement("div", { className: "blob" }),
+            React.createElement("div", { className: "blob blob2" }),
+            React.createElement("img", { alt: "Avatar", src: avatar })
+          )
+        )
+      );
+    }
+
+    function TOC(){
+      return (
+        React.createElement("nav", { className: "toc", "aria-label": "Table of contents" },
+          React.createElement("div", { className: "head" }, "Contents"),
+          React.createElement("ol", null,
+            React.createElement("li", null, React.createElement("a", { href: "#about" }, "About")),
+            React.createElement("li", null, React.createElement("a", { href: "#highlights" }, "Highlights")),
+            React.createElement("li", null, React.createElement("a", { href: "#program" }, "Program leadership")),
+            React.createElement("li", null, React.createElement("a", { href: "#featured" }, "Featured projects")),
+            React.createElement("li", null, React.createElement("a", { href: "#repos" }, "Repositories")),
+            React.createElement("li", null, React.createElement("a", { href: "#contact" }, "Contact"))
+          )
+        )
+      );
+    }
+
+    function InfoBox({ user }){
+      return (
+        React.createElement("aside", { className: "infobox" },
+          React.createElement("table", null,
+            React.createElement("caption", null, "Profile"),
+            React.createElement("tbody", null,
+              React.createElement("tr", null, React.createElement("th", null, "Name"), React.createElement("td", null, "Harshit Kant")),
+              React.createElement("tr", null, React.createElement("th", null, "Role"), React.createElement("td", null, "Front end Engineer, TPM")),
+              React.createElement("tr", null, React.createElement("th", null, "Location"), React.createElement("td", null, "India, USA")),
+              React.createElement("tr", null, React.createElement("th", null, "GitHub"), React.createElement("td", null, React.createElement("a", { href: "https://github.com/HarshitKant", target: "_blank", rel: "noopener" }, "github.com/HarshitKant"))),
+              React.createElement("tr", null, React.createElement("th", null, "LinkedIn"), React.createElement("td", null, React.createElement("a", { href: "https://www.linkedin.com/in/harshit-kant-hk-0a87864b/", target: "_blank", rel: "noopener" }, "linkedin.com/in/harshit-kant-hk-0a87864b"))),
+              React.createElement("tr", null, React.createElement("th", null, "Email"), React.createElement("td", null, React.createElement("a", { href: "mailto:hkant27008@gmail.com" }, "hkant27008@gmail.com"))),
+              user && React.createElement("tr", null, React.createElement("th", null, "Followers"), React.createElement("td", null, user.followers || 0)),
+              user && React.createElement("tr", null, React.createElement("th", null, "Public repos"), React.createElement("td", null, user.public_repos || 0))
+            )
+          )
+        )
+      );
+    }
+
+    function RepoGrid({ repos, q }){
+      const filtered = React.useMemo(() => {
+        const term = (q || "").toLowerCase().trim();
+        const list = repos.filter(r => !r.fork);
+        if(!term) return list;
+        return list.filter(r => {
+          const hay = [r.name, r.description || "", (r.topics || []).join(" ")].join(" ").toLowerCase();
+          return hay.includes(term);
+        });
+      }, [repos, q]);
+
+      if(!repos.length) return React.createElement("div", null, "Loading repositories...");
+      if(!filtered.length) return React.createElement("div", null, "No repositories match your search.");
+
+      return (
+        React.createElement("div", { className: "repo-grid" },
+          filtered.slice(0, 12).map(r =>
+            React.createElement("div", { className: "repo", key: r.id },
+              React.createElement("a", { href: r.html_url, target: "_blank", rel: "noopener" },
+                React.createElement("div", { className: "name" }, r.name)
+              ),
+              React.createElement("div", { className: "desc" }, r.description || ""),
+              React.createElement("div", { className: "meta" },
+                r.language && React.createElement("span", null, r.language),
+                React.createElement("span", null, "★ ", r.stargazers_count),
+                React.createElement("span", null, "⑂ ", r.forks_count),
+                React.createElement("span", null, "Updated ", new Date(r.updated_at).toLocaleDateString())
+              )
+            )
+          )
+        )
+      );
+    }
+
+    function Content(){
+      return (
+        React.createElement("article", null,
+          React.createElement("h2", { id: "about" }, "About"),
+          React.createElement("p", null, "I design, build, and ship front end systems with a focus on performance, accessibility, and polish. As a TPM, I run programs with clear scope, risk logs, and crisp status. The result is predictable delivery and interfaces that feel right."),
+
+          React.createElement("h3", null, "Core skills"),
+          React.createElement("p", null, "React, TypeScript, CSS architecture, Web performance budgets, Design systems, Accessibility, Testing and CI, Program planning, Cross team alignment"),
+
+          React.createElement("h2", { id: "highlights" }, "Highlights"),
+          React.createElement("ul", null,
+            React.createElement("li", null, "Cut regression time by more than 40 percent with automation suites and release gates."),
+            React.createElement("li", null, "Led front end replatform to TypeScript and Vite, improved TTI and CLS while reducing bundle size."),
+            React.createElement("li", null, "Moved teams from ad hoc to cadence, weekly plans, RAID logs, stakeholder reads.")
+          ),
+
+          React.createElement("h2", { id: "program" }, "Program leadership"),
+          React.createElement("p", null, "I drive delivery with plans that fit reality, short feedback loops, and clear communication."),
+          React.createElement("ul", null,
+            React.createElement("li", null, "Quarter plans with measurable outcomes and owner maps."),
+            React.createElement("li", null, "Risk based checkpoints, go or no go based on data."),
+            React.createElement("li", null, "Docs that explain tradeoffs in plain language.")
+          ),
+
+          React.createElement("h2", { id: "featured" }, "Featured projects"),
+          React.createElement("ul", null,
+            React.createElement("li", null, React.createElement("b", null, "TrueVoice"), ", testimonial collection SaaS, MERN and Stripe, ", React.createElement("span", { className: "chips" }, React.createElement("span", { className: "chip" }, "MERN"), React.createElement("span", { className: "chip" }, "Stripe"), React.createElement("span", { className: "chip" }, "SaaS"))),
+            React.createElement("li", null, React.createElement("b", null, "Buck$Buddy"), ", analytics assistant for equities and Reddit sentiment, ", React.createElement("span", { className: "chips" }, React.createElement("span", { className: "chip" }, "LLM"), React.createElement("span", { className: "chip" }, "Pandas"), React.createElement("span", { className: "chip" }, "Plotly")))
+          ),
+
+          React.createElement("h2", { id: "repos" }, "Open source and repositories"),
+          React.createElement("p", null, "Live from GitHub, sorted by recent activity. Use the search in the header to filter.")
+        )
+      );
+    }
+
+    function Footer(){
+      return React.createElement("footer", null, "© ", new Date().getFullYear(), " Harshit Kant, all rights reserved.");
+    }
+
+    function App(){
+      const GH = "HarshitKant";
+      const { data: user } = useGithubUser(GH);
+      const { repos } = useGithubRepos(GH);
+      const [q, setQ] = React.useState("");
+      const [mode, setMode] = React.useState("dark");
+
+      React.useEffect(() => {
+        const root = document.documentElement;
+        if(mode === "light"){ root.classList.add("light"); } else { root.classList.remove("light"); }
+      }, [mode]);
+
+      return (
+        React.createElement("div", { className: "page" },
+          React.createElement(Header, { q, setQ, mode, setMode }),
+          React.createElement("section", { className: "hero" }, React.createElement(Hero, { user })),
+          React.createElement("section", { className: "grid" },
+            React.createElement(TOC, null),
+            React.createElement("main", null,
+              React.createElement(Content, null),
+              React.createElement(RepoGrid, { repos, q }),
+              React.createElement("h2", { id: "contact" }, "Contact"),
+              React.createElement("p", null,
+                "Email ",
+                React.createElement("a", { href: "mailto:hkant27008@gmail.com" }, "hkant27008@gmail.com"),
+                ", connect on ",
+                React.createElement("a", { href: "https://www.linkedin.com/in/harshit-kant-hk-0a87864b/", target: "_blank", rel: "noopener" }, "LinkedIn"),
+                ", and follow on ",
+                React.createElement("a", { href: "https://github.com/HarshitKant", target: "_blank", rel: "noopener" }, "GitHub"),
+                "."
+              )
+            ),
+            React.createElement(InfoBox, { user })
+          ),
+          React.createElement(Footer, null)
+        )
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+  </script>
+</body>
+</html>
