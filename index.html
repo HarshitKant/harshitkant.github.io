@@ -6,14 +6,17 @@
   <title>Harshit Kant, Front End Engineer, TPM</title>
   <meta name="description" content="Front End work and program delivery by Harshit Kant. Wikipedia style layout with live GitHub data." />
 
+  <!-- Social preview -->
   <meta property="og:title" content="Harshit Kant, Front End Engineer, TPM" />
   <meta property="og:description" content="Front End, program delivery, live GitHub repos." />
   <meta property="og:url" content="https://harshitkant.github.io/" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
 
+  <!-- Favicon, swap to your avatar url anytime -->
   <link rel="icon" href="https://avatars.githubusercontent.com/u/9919?s=200&v=4" />
 
+  <!-- React via CDN -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
@@ -36,6 +39,7 @@
       --dark-border: #233055;
       --dark-link: #79b6ff;
     }
+
     * { box-sizing: border-box; }
     html, body { margin: 0; height: 100%; }
     html { scroll-behavior: smooth; }
@@ -114,6 +118,7 @@
     .toast { position: fixed; bottom: 16px; right: 16px; background: #111; color: #fff; padding: 10px 14px; border-radius: 6px; box-shadow: 0 6px 18px rgba(0,0,0,.25); font-size: 14px; opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity .15s ease, transform .15s ease; }
     .toast.show { opacity: 1; transform: translateY(0); }
 
+    /* Dark mode */
     .dark body, .dark { background: var(--dark-bg); color: var(--dark-text); }
     .dark header { background: rgba(12,16,32,.85); border-bottom-color: var(--dark-border); }
     .dark .search, .dark .toggle, .dark .btn { background: var(--dark-panel); color: var(--dark-text); border-color: var(--dark-border); }
@@ -140,8 +145,14 @@
 
   <script type="text/javascript">
     const { useEffect, useMemo, useState } = React;
-    const RESUME_PATH = "CV_HarshitKant_Front_End.pdf";
 
+    /* Resume path handling */
+    const SAME_ORIGIN = location.hostname.endsWith("github.io");
+    const RESUME_PATH = SAME_ORIGIN
+      ? "CV_HarshitKant_Front_End.pdf"
+      : "https://harshitkant.github.io/CV_HarshitKant_Front_End.pdf";
+
+    /* Data hooks */
     function useGithubUser(username){
       const [data, setData] = useState(null);
       useEffect(() => {
@@ -179,11 +190,16 @@
       return { repos };
     }
 
+    /* Utilities */
     function highlight(text, term){
       if(!term) return [text];
       const i = text.toLowerCase().indexOf(term.toLowerCase());
       if(i === -1) return [text];
-      return [ text.slice(0, i), React.createElement("mark", { key: "m" }, text.slice(i, i + term.length)), text.slice(i + term.length) ];
+      return [
+        text.slice(0, i),
+        React.createElement("mark", { key: "m" }, text.slice(i, i + term.length)),
+        text.slice(i + term.length)
+      ];
     }
 
     function copyLink(id){
@@ -207,6 +223,25 @@
       return (b / Math.pow(1024, i)).toFixed(i ? 1 : 0) + " " + u[i];
     }
 
+    /* Force download helper for PDFs on GitHub Pages */
+    async function forceDownload(url, suggestedName = "Harshit_Kant_Resume.pdf"){
+      try {
+        const res = await fetch(url, { credentials: "same-origin" });
+        if(!res.ok) throw new Error("bad status");
+        const blob = await res.blob();
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = suggestedName;
+        document.body.appendChild(a);
+        a.click();
+        URL.revokeObjectURL(a.href);
+        a.remove();
+      } catch (e) {
+        window.open(url, "_blank", "noopener");
+      }
+    }
+
+    /* UI parts */
     function Header({ q, setQ, mode, setMode }){
       const [resumeSize, setResumeSize] = React.useState("");
 
@@ -225,6 +260,17 @@
           .catch(() => showToast("Copy failed"));
       };
 
+      const onResumeClick = (e) => {
+        if (SAME_ORIGIN) {
+          e.preventDefault();
+          forceDownload(RESUME_PATH, "Harshit_Kant_Resume.pdf");
+        }
+      };
+
+      const resumeProps = SAME_ORIGIN
+        ? { className: "btn primary", href: RESUME_PATH, onClick: onResumeClick }
+        : { className: "btn primary", href: RESUME_PATH, target: "_blank", rel: "noopener" };
+
       return (
         React.createElement("header", null,
           React.createElement("div", { className: "brand" },
@@ -236,9 +282,7 @@
           ),
           React.createElement("div", { className: "spacer" }),
           React.createElement("div", { className: "actions" },
-            React.createElement("a", { className: "btn primary", href: RESUME_PATH, download: true },
-              "Resume", resumeSize ? ` (${resumeSize})` : ""
-            ),
+            React.createElement("a", resumeProps, "Resume", resumeSize ? ` (${resumeSize})` : ""),
             React.createElement("button", { className: "btn", onClick: handleCopy }, "Copy email")
           ),
           React.createElement("div", { className: "search-wrap" },
@@ -261,7 +305,9 @@
           React.createElement("div", null,
             React.createElement("h1", null, "Front End Engineer, TPM"),
             React.createElement("div", { className: "roles" }, "JavaScript, TypeScript, React, Web performance, Program delivery"),
-            React.createElement("p", { className: "lead" }, "I build fast, tidy interfaces, guide delivery across teams, and keep quality high. I ship inclusive UIs, smooth interactions, and clear roadmaps."),
+            React.createElement("p", { className: "lead" },
+              "I build fast, tidy interfaces, guide delivery across teams, and keep quality high. I ship inclusive UIs, smooth interactions, and clear roadmaps."
+            ),
             React.createElement("div", { className: "chips", style: { marginTop: 10 } },
               ["React", "TypeScript", "Vite", "Next.js", "Node", "Automation", "Program planning"].map(t =>
                 React.createElement("span", { key: t, className: "chip" }, t)
@@ -337,7 +383,7 @@
             ", ", item.desc, " ",
             React.createElement("span", { className: "chips" },
               (item.tags || []).map(t => React.createElement("span", { key: t, className: "chip" }, t)),
-              item.stars != null && React.createElement("span", { className: "chip" }, "★ " + item.stars)
+              item.stars != null && React.createElement("span", { key: "star", className: "chip" }, "★ " + item.stars)
             )
           )
         )
@@ -441,6 +487,7 @@
         localStorage.setItem("mode", mode);
       }, [mode]);
 
+      // Scroll spy for TOC
       useEffect(() => {
         const ids = ["about","highlights","program","featured","repos","contact"];
         const linkMap = new Map(ids.map(id => [id, document.querySelector(`.toc a[href="#${id}"]`)]));
